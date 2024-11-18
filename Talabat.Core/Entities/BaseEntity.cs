@@ -1,6 +1,7 @@
 namespace Talabat.Core.Entities;
 
-public class BaseEntity
+public class BaseEntity<TKey>
 {
-    public int Id { get; set; }
+    public TKey Id { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

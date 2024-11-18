@@ -26,12 +26,18 @@ public class ProductConfigurations : IEntityTypeConfiguration<Product>
         // Product & Brand
         builder.HasOne(p => p.Brand)
             .WithMany()
-            .HasForeignKey(p => p.BrandId);
+            .HasForeignKey(p => p.BrandId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         // Product & Category
         builder.HasOne(p => p.Category)
             .WithMany()
-            .HasForeignKey(p => p.CategoryId);
+            .HasForeignKey(p => p.CategoryId)
+            .OnDelete(DeleteBehavior.SetNull);
+        
+        builder.Property(p => p.BrandId).IsRequired(false);
+        
+        builder.Property(p => p.CategoryId).IsRequired(false);
         
     }
 }
