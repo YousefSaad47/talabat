@@ -1,6 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Talabat.Core;
+using Talabat.Core.Mapping.Products;
+using Talabat.Core.Service.Contract;
+using Talabat.Repository;
 using Talabat.Repository.Data;
 using Talabat.Repository.Data.Contexts;
+using Talabat.Service.Services.Products;
 
 namespace Talabat.Apis;
 
@@ -25,6 +30,10 @@ public class Program
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
+        
+        builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        builder.Services.AddAutoMapper(m => m.AddProfile(new ProductProfile()));
 
         #endregion
 
