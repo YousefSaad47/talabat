@@ -7,7 +7,10 @@ public class ProductSpecification : BaseSpecification<Entities.Product, int>
         AddIncludes();
     }
     
-    public ProductSpecification(string? sort)
+    public ProductSpecification(string? sort, int? brandId, int? typeId)
+        : base(p => 
+            (!brandId.HasValue || brandId == p.BrandId) && (!typeId.HasValue || typeId == p.CategoryId)
+        )
     {
         if (!string.IsNullOrEmpty(sort))
         {

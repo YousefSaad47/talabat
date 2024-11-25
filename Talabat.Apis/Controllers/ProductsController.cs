@@ -14,9 +14,9 @@ public class ProductsController : BaseApiController
    }
    
    [HttpGet]
-   public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllProducts([FromQuery]string? sort)
+   public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllProducts([FromQuery]string? sort, [FromQuery]int? brandId, [FromQuery]int? typeId)
    {
-       var products = await _productService.GetAllProductsAsync(sort);
+       var products = await _productService.GetAllProductsAsync(sort, brandId, typeId);
        
        return Ok(products);
    }
