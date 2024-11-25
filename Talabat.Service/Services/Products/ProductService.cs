@@ -3,6 +3,8 @@ using Talabat.Core;
 using Talabat.Core.Dtos.Products;
 using Talabat.Core.Entities;
 using Talabat.Core.Service.Contract;
+using Talabat.Core.Specifications;
+using Talabat.Core.Specifications.Product;
 
 namespace Talabat.Service.Services.Products;
 
@@ -19,7 +21,9 @@ public class ProductService : IProductService
     
     public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
     {
-        return _mapper.Map<IEnumerable<ProductDto>>(await _unitOfWork.Repository<Product, int>().GetAllAsync());
+        var spec = new ProductSpecification();
+        return _mapper
+            .Map<IEnumerable<ProductDto>>(await _unitOfWork.Repository<Product, int>().GetAllWithSpecAsync(spec));
     }
 
     public async Task<IEnumerable<CategoryBrandDto>> GetAllCategoriesAsync()
@@ -34,6 +38,7 @@ public class ProductService : IProductService
 
     public async Task<ProductDto> GetProductById(int id)
     {
-        return _mapper.Map<ProductDto>(await _unitOfWork.Repository<Product, int>().GetByIdAsync(id));
+        var spec = new ProductSpecification(id);
+        return _mapper.Map<ProductDto>(await _unitOfWork.Repository<Product, int>().GetWithSpecAsync(spec));
     }
 }
