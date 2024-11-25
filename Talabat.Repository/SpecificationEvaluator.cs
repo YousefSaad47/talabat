@@ -28,6 +28,11 @@ public static class SpecificationEvaluator<TEntity, TKey> where TEntity : BaseEn
         query = spec.Includes.Aggregate
         (query, (currentQuery, includeExp) 
             => currentQuery.Include(includeExp));
+
+        if (spec.IsPaginationEnabled)
+        {
+            query = query.Skip(spec.Skip).Take(spec.Take);
+        }
         
         return query;
     }

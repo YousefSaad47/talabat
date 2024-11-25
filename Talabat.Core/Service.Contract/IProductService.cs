@@ -4,7 +4,7 @@ namespace Talabat.Core.Service.Contract;
 
 public interface IProductService
 {
-    Task<IEnumerable<ProductDto>> GetAllProductsAsync(string? sort, int? brandId, int? typeId);
+    Task<IEnumerable<ProductDto>> GetAllProductsAsync(string? sort, int? brandId, int? typeId, int? pageSize, int? pageIndex);
 
     Task<IEnumerable<CategoryBrandDto>> GetAllCategoriesAsync();
     

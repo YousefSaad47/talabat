@@ -7,7 +7,7 @@ public class ProductSpecification : BaseSpecification<Entities.Product, int>
         AddIncludes();
     }
     
-    public ProductSpecification(string? sort, int? brandId, int? typeId)
+    public ProductSpecification(string? sort, int? brandId, int? typeId, int pageSize, int pageIndex)
         : base(p => 
             (!brandId.HasValue || brandId == p.BrandId) && (!typeId.HasValue || typeId == p.CategoryId)
         )
@@ -28,6 +28,8 @@ public class ProductSpecification : BaseSpecification<Entities.Product, int>
             }
         }
         AddIncludes();
+        
+        ApplyPagination(pageSize * (pageIndex - 1), pageSize);
     }
     
     private void AddIncludes()
