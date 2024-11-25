@@ -33,7 +33,7 @@ public class Program
         
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-        builder.Services.AddAutoMapper(m => m.AddProfile(new ProductProfile()));
+        builder.Services.AddAutoMapper(m => m.AddProfile(new ProductProfile(builder.Configuration)));
 
         #endregion
 
@@ -67,6 +67,8 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseStaticFiles();
 
         app.UseHttpsRedirection();
 

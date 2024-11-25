@@ -13,8 +13,18 @@ public static class SpecificationEvaluator<TEntity, TKey> where TEntity : BaseEn
         if (spec.Criteria is not null)
         {
             query = query.Where(spec.Criteria);
-        } 
+        }
+
+        if (spec.OrderBy is not null)
+        {
+            query = query.OrderBy(spec.OrderBy);
+        }
         
+        if (spec.OrderByDesc is not null)
+        {
+            query = query.OrderByDescending(spec.OrderByDesc);
+        }
+      
         query = spec.Includes.Aggregate
         (query, (currentQuery, includeExp) 
             => currentQuery.Include(includeExp));

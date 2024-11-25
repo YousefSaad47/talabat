@@ -8,5 +8,6 @@
   "AllowedHosts": "*",
   "ConnectionStrings": {
     "DefaultConnection": <YOUR_CONNECTION_STRING>
-  }
+  },
+  "baseUrl": <YOUR_BASE_URL>
 }

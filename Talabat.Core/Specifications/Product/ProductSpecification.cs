@@ -7,8 +7,23 @@ public class ProductSpecification : BaseSpecification<Entities.Product, int>
         AddIncludes();
     }
     
-    public ProductSpecification()
+    public ProductSpecification(string? sort)
     {
+        if (!string.IsNullOrEmpty(sort))
+        {
+            switch (sort)
+            {
+                case "priceAsc":
+                    AddOrderBy(p => p.Price);
+                    break;
+                case "priceDesc":
+                    AddOrderByDesc(p => p.Price);
+                    break;
+                default:
+                    AddOrderBy(p => p.Name);
+                    break;
+            }
+        }
         AddIncludes();
     }
     

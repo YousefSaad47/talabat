@@ -19,4 +19,8 @@
       <ProjectReference Include="..\Talabat.Service\Talabat.Service.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\" />
+    </ItemGroup>
+
 </Project>
