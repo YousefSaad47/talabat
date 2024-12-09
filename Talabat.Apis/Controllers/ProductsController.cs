@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Talabat.Apis.Attributes;
 using Talabat.Core.Dtos.Products;
@@ -16,6 +17,7 @@ public class ProductsController : BaseApiController
    
    [HttpGet]
    [Cache(100)]
+   [Authorize]
    public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllProducts(
        [FromQuery]string? sort,
        [FromQuery]int? brandId,
