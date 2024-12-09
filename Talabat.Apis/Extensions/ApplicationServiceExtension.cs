@@ -1,17 +1,25 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 using Talabat.Apis.Errors;
 using Talabat.Core;
+using Talabat.Core.Entities.Identity;
 using Talabat.Core.Mapping.Basket;
 using Talabat.Core.Mapping.Products;
 using Talabat.Core.Repositories.Contract;
 using Talabat.Core.Service.Contract;
 using Talabat.Repository;
 using Talabat.Repository.Data.Contexts;
+using Talabat.Repository.Identity.Context;
 using Talabat.Repository.Repositories;
 using Talabat.Service.Services.Cache;
 using Talabat.Service.Services.Products;
+using Talabat.Service.Services.Token;
+using Talabat.Service.Services.User;
 
 namespace Talabat.Apis.Extensions;
 
@@ -26,6 +34,8 @@ public static class ApplicationServiceExtension
         services.AddAutoMapperServices(configuration);
         services.ConfigureInvalidStateResponseServices();
         services.AddRedisServices(configuration);
+        services.AddIdentityServices();
+        services.AddAuthenticationServices(configuration);
         
         return services;
     }
@@ -50,6 +60,12 @@ public static class ApplicationServiceExtension
         {
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
         });
+        
+        services.AddDbContext<StoreIdentityDbContext>(options =>
+        {
+            options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"));
+        });
+        
         return services;
     }
     
@@ -60,6 +76,9 @@ public static class ApplicationServiceExtension
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IBasketRepository, BasketRepository>();
         services.AddScoped<ICacheService, CacheService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ITokenService, TokenService>();
+        
         
         return services;
     }
@@ -95,14 +114,46 @@ public static class ApplicationServiceExtension
         return services;
     }
     
-    private static IServiceCollection AddRedisServices(this IServiceCollection services, IConfiguration configuration)
-    {
+    private static IServiceCollection AddRedisServices(this IServiceCollection services, IConfiguration configuration) {
         services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
         {
             var connection = configuration.GetConnectionString("Redis");
 
             return ConnectionMultiplexer.Connect(connection);
         });
+        return services;
+    }
+    
+    private static IServiceCollection AddIdentityServices(this IServiceCollection services)
+    {
+
+        services.AddIdentity<AppUser, IdentityRole>()
+            .AddEntityFrameworkStores<StoreIdentityDbContext>();
+            
+        return services;
+    }
+    
+    private static IServiceCollection AddAuthenticationServices(this IServiceCollection services, IConfiguration configuration)
+    {
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateIssuer = true,
+                ValidIssuer = configuration["Jwt:issuer"],
+                ValidateAudience = true,
+                ValidAudience = configuration["Jwt:audience"],
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:key"]))
+            };
+        });
+            
         return services;
     }
 }
