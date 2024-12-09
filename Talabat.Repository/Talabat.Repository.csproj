@@ -8,6 +8,8 @@
 
     <ItemGroup>
       <Folder Include="Data\DataSeed\" />
+      <Folder Include="Identity\Configurations\" />
+      <Folder Include="Identity\DataSeed\" />
     </ItemGroup>
 
     <ItemGroup>
