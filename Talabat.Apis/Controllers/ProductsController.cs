@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Talabat.Apis.Attributes;
 using Talabat.Core.Dtos.Products;
 using Talabat.Core.Service.Contract;
 
@@ -14,6 +15,7 @@ public class ProductsController : BaseApiController
    }
    
    [HttpGet]
+   [Cache(100)]
    public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllProducts(
        [FromQuery]string? sort,
        [FromQuery]int? brandId,

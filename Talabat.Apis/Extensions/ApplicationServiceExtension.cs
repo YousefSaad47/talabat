@@ -10,6 +10,7 @@ using Talabat.Core.Service.Contract;
 using Talabat.Repository;
 using Talabat.Repository.Data.Contexts;
 using Talabat.Repository.Repositories;
+using Talabat.Service.Services.Cache;
 using Talabat.Service.Services.Products;
 
 namespace Talabat.Apis.Extensions;
@@ -58,6 +59,7 @@ public static class ApplicationServiceExtension
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IBasketRepository, BasketRepository>();
+        services.AddScoped<ICacheService, CacheService>();
         
         return services;
     }
