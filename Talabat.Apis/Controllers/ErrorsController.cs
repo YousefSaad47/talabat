@@ -3,7 +3,7 @@ using Talabat.Apis.Errors;
 
 namespace Talabat.Apis.Controllers;
 
-[Route("errors/{code")]
+[Route("errors/{code}")]
 [ApiController]
 [ApiExplorerSettings(IgnoreApi = true)]
 public class ErrorsController : ControllerBase
