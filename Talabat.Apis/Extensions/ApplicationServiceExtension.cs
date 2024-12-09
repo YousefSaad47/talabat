@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using Talabat.Apis.Errors;
 using Talabat.Core;
+using Talabat.Core.Mapping.Basket;
 using Talabat.Core.Mapping.Products;
+using Talabat.Core.Repositories.Contract;
 using Talabat.Core.Service.Contract;
 using Talabat.Repository;
 using Talabat.Repository.Data.Contexts;
+using Talabat.Repository.Repositories;
 using Talabat.Service.Services.Products;
 
 namespace Talabat.Apis.Extensions;
@@ -20,6 +24,8 @@ public static class ApplicationServiceExtension
         services.AddUserDefinedServices();
         services.AddAutoMapperServices(configuration);
         services.ConfigureInvalidStateResponseServices();
+        services.AddRedisServices(configuration);
+        
         return services;
     }
     
@@ -51,6 +57,8 @@ public static class ApplicationServiceExtension
         
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IBasketRepository, BasketRepository>();
+        
         return services;
     }
     
@@ -58,9 +66,10 @@ public static class ApplicationServiceExtension
     {
         
         services.AddAutoMapper(m => m.AddProfile(new ProductProfile(configuration)));
+        services.AddAutoMapper(m => m.AddProfile(new BasketProfile()));
+        
         return services;
     }
-    
     
     private static IServiceCollection ConfigureInvalidStateResponseServices(this IServiceCollection services)
     {
@@ -80,6 +89,17 @@ public static class ApplicationServiceExtension
                 
                 return new BadRequestObjectResult(validationErrorResponse);
             };
+        });
+        return services;
+    }
+    
+    private static IServiceCollection AddRedisServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
+        {
+            var connection = configuration.GetConnectionString("Redis");
+
+            return ConnectionMultiplexer.Connect(connection);
         });
         return services;
     }
