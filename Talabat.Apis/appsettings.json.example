@@ -7,7 +7,15 @@
   },
   "AllowedHosts": "*",
   "ConnectionStrings": {
-    "DefaultConnection": <YOUR_CONNECTION_STRING>
+    "DefaultConnection": "<YOUR_DEFAULT_CONNECTION_STRING>",
+    "IdentityConnection": "<YOUR_IDENTITY_CONNECTION_STRING>",
+    "Redis": "localhost"
   },
-  "baseUrl": <YOUR_BASE_URL>
+  "baseUrl": "<YOUR_BASE_URL>",
+  "Jwt": {
+    "issuer": "<YOUR_JWT_ISSUER>",
+    "audience": "<YOUR_JWT_AUDIENCE>",
+    "ExpireTime": "<YOUR_JWT_EXPIRE_TIME>",
+    "key": "<YOUR_JWT_SECRET_KEY>"
+  }
 }
